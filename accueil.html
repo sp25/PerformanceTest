@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Évaluer les performances d'une requête spatiale:</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        html, body {
+            height: 90%;
+            margin: 50px;
+            padding: 0;
+        }
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            visiblity: visible;
+        }
+        .loaderHidden {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 0px;
+            animation: spin 2s linear infinite;
+            visiblity: hidden;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body onload="javascript:InitForm()">
+<div>
+    <h2>Évaluer les performances d'une requête spatiale:</h2>
+    <br>
+    <div class="row">
+        <div class="col-xs-4 form-group">
+            <label>Type d'index:</label><br>
+            <input id="r2d" type="radio" name="typeIndex" value="2d" checked="checked"> 2d<br>
+            <input id="r2ds" type="radio" name="typeIndex" value="2dsphere">2dsphere<br><br>
+            <label>Type de géométrie:</label><br>
+            <select id="geometrie">
+                <option value="ponctuelle">Ponctuelle</option>
+                <option value="lineaire">Linéaire</option>
+            </select><br><br>
+            <label>Type d'opération spatiale:</label><br>
+            <select id="operateur">
+                <option value="$near">$near</option>
+                <option value="$within">$within</option>
+                <option value="$geoIntersect">$geoIntersect</option>
+                <option value="pipeline">pipeline</option>
+            </select><br><br>
+            <label>Distance de recherche:</label><br>
+            <select id="distance">
+                <option value="1">1 km</option>
+                <option value="2">2 km</option>
+                <option value="4">4 km</option>
+                <option value="8">8 km</option>
+            </select><br><br>
+            <label>Jeu de données:</label><br>
+            <select id="donnees">
+                <option value="dataset1">dataset1</option>
+                <option value="dataset1">dataset2</option>
+                <option value="dataset1">dataset3</option>
+            </select><br><br>
+            <button type="button" onclick="executeRequest()" class="btn btn-primary">Soumettre</button>
+            <br><br>
+        </div>
+        <div class="col-xs-6 form-group">
+            <div class="alert alert-warning" id="alert">
+                <strong>Avertissement!</strong> L'opérateur $geoIntersect n'existe pas pour un index de type 2D.
+            </div>
+            <h3>Résultats:</h3>
+            <label>Temps moyen en millisecondes:</label><br>
+            <label id="resultatTemps"></label><br><br>
+            <label>Nombre d'enregistrements moyen retournés:</label><br>
+            <label id="resultatReturned"></label><br>
+            <label>Nombre d'enregistrement dans la table:</label><br>
+            <label id="nbrEnrTable"></label><br><br>
+            <div class ="loader" id="spinner"></div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var $ = require("express");
+
+    function InitForm(){
+        document.getElementById('alert').style.visibility = 'hidden';
+        document.getElementById('spinner').style.visibility = 'hidden';
+    }
+
+    function executeRequest() {
+
+        document.getElementById('alert').style.visibility = 'hidden';
+        document.getElementById('spinner').style.visibility = 'visible';
+
+        document.getElementById('spinner').style.visibility="visible";
+        document.getElementById('spinner').style.height="120px";
+        document.getElementById('alert').style.visibility = "hidden";
+        document.getElementById('resultatTemps').innerHTML = "";
+        document.getElementById('resultatReturned').innerHTML = "";
+
+        var index2d = document.getElementById('r2d').checked;
+        var geometrie = document.getElementById("geometrie").value;
+        var operateur = document.getElementById("operateur").value;
+        var distance = document.getElementById("distance").value;
+        var donnees= document.getElementById("donnees").value;
+
+        if (index2d && operateur == '$geoIntersect'){
+            document.getElementById('alert').style.visibility = 'visible';
+            document.getElementById('spinner').style.visibility = 'hidden';
+            return;
+        }
+
+        var nbrEnregistrement = 0;
+        if (donnees === 'dataset1'){ nbrEnregistrement = 10000 }
+        else if (donnees === 'dataset2'){ nbrEnregistrement = 20000}
+        else if (donnees === 'dataset3') {nbrEnregistrement = 30000}
+        document.getElementById('nbrEnrTable').innerHTML = nbrEnregistrement;
+
+        var queryString = "?index2d=" + index2d + "&geometrie=" + geometrie + "&operateur=" + operateur +
+                            "&distance=" + distance + "&donnees=" + donnees;
+
+        $.get("http://localhost:8081/performances" + queryString, function (req, status) {
+
+            var temps = String(req.temps);
+            var returned = String(req.returned);
+
+            document.getElementById('resultatTemps').innerHTML = temps;
+            document.getElementById('resultatReturned').innerHTML = returned;
+
+            document.getElementById('spinner').style.visibility = 'hidden';
+            document.getElementById('spinner').style.visibility = 'hidden';
+        });
+    }
+
+</script>
+</body>
+</html>
