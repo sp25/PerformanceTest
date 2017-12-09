@@ -21,7 +21,6 @@ var http = require('http');
 
 var server = http.createServer(app).listen(process.env.PORT || 8081);
 
-*/
 var url = require('url');
 //var http = require('http');
 var fs = require('fs');
