@@ -26,7 +26,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/',function(req,res){
-    res.sendFile(path.join(__dirname+'/accueil.html'));
+    res.sendFile(path.join(__dirname, 'accueil.html'));
 });
 
 app.get('/performances', function(req, res) {
