@@ -5,13 +5,13 @@ var fs = require("fs");
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var path = require("path");
-var url = 'mongodb://localhost:27017/bd_avance';
 
-var url_2d_points = 'mongodb://localhost:27017/bd_projet_2d_p';
-var url_2d_lignes = 'mongodb://localhost:27017/bd_projet_2d_l';
-var url_2dsphere_points = 'mongodb://localhost:27017/bd_projet_2dsphere_p';
-var url_2dsphere_lignes = 'mongodb://localhost:27017/bd_projet_2dsphere_l';
-var url_inputs = 'mongodb://localhost:27017/bd_inputs';
+var urlHero = "mongodb://publicUser:211jymlaPublic25@ds135926.mlab.com:35926/heroku_kqb2bkkp";
+var dataset2dsp_p = '_2dsp_p';
+var dataset2dsp_l = '_2dsp_l';
+var dataset2d_p = '_2d_p';
+var dataset2d_l = '_2d_l';
+
 var distancesGeom = [];
 var positionPoint = { "type": "Point", "coordinates": [ 7.562892923000049, 51.535703584000032 ] };
 var distances =[1,2,4,8];
@@ -37,15 +37,15 @@ app.get('/performances', function(req, res) {
     var donnees = req.query.donnees;
 
     console.log("Début obtenir paramètres...");
-    var url = obtenirUrlClientMongo(index2d, geometrie);
+    var donnees = obtenirDatasetClientMongo(index2d, geometrie);
     var distanceParam = obtenirDistance(index2d, distance, operateur);
     var query = obtenirQuery(index2d, operateur, distance);
 
     console.log("Début connection à Mongo...");
-    MongoClient.connect(url, function (err, db) {
+    MongoClient.connect(urlHero, function (err, db) {
         if (err) throw err;
 
-        console.log("Début de la requête sur BD :" + url);
+        console.log("Début de la requête sur BD :" + urlHero);
         var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
             console.log("Fin de la requête:");
@@ -83,15 +83,16 @@ function obtenirDistance(index2d, distance, operateur){
 }
 
 
-function obtenirUrlClientMongo(index2d, geometrie){
+function obtenirDatasetClientMongo(index2d, geometrie){
 
-    var url = "";
-    if (index2d && geometrie == 'ponctuelle') url = url_2d_points;
-    else if (index2d && geometrie == 'lineaire') url = url_2d_lignes;
-    else if (!index2d && geometrie == 'ponctuelle') url = url_2dsphere_points;
-    else if (!index2d && geometrie == 'lineaire') url = url_2dsphere_lignes;
+    var datasetBase = "dataset1";
+    var dataset = "";
+    if (index2d && geometrie == 'ponctuelle') dataset = datasetBase + dataset2dsp_p;
+    else if (index2d && geometrie == 'lineaire') dataset = datasetBase + dataset2dsp_l;
+    else if (!index2d && geometrie == 'ponctuelle') dataset = datasetBase + dataset2d_p;
+    else if (!index2d && geometrie == 'lineaire') dataset = datasetBase + dataset2d_l;
 
-    return url;
+    return dataset;
 }
 
 function obtenirQuery(index2d, operateur, distance){
@@ -126,7 +127,7 @@ function obtenirPolygoneSelonDistance(distance){
 
 function init(){
 
-    MongoClient.connect(url_inputs, function(err, db) {
+    MongoClient.connect(urlHero, function(err, db) {
         if (err) throw err;
 
         for (var j = 0; j < distances.length; j++) {
