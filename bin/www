@@ -19,13 +19,13 @@ var http = require('http');
  * Create HTTP server.
  */
 
-/*var server = http.createServer(app).listen(process.env.PORT || 8081);
+var server = http.createServer(app).listen(process.env.PORT || 8081);
 
 */
 var url = require('url');
 //var http = require('http');
 var fs = require('fs');
-
+/*
 var server = http.createServer(function(req, res){
   var q = url.parse(req.url, true);
   var filename = "." + q.pathname;
@@ -40,7 +40,7 @@ var server = http.createServer(function(req, res){
     return res.end();
   });
 }).listen(process.env.PORT);
-
+*/
 /**
  * Listen on provided port, on all network interfaces.
  */
