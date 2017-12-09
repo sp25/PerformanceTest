@@ -19,7 +19,7 @@ var http = require('http');
  * Create HTTP server.
  */
 
-var server = http.createServer(app).listen('8081');
+var server = http.createServer(app).listen(process.env.PORT || 8081);
 
 
 /**
