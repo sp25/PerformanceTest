@@ -98,9 +98,9 @@ app.get('/performances', function(req, res) {
             return;
         }
         else {
-            var query = obtenirQueryAgregation(index2d, distance);
+            var queryAgg = obtenirQueryAgregation(index2d, distance);
             var before = new Date();
-            var cursor = db.collection(donnees).aggregate(query).toArray(function (err, explanation) {
+            var cursor = db.collection(donnees).aggregate(queryAgg).toArray(function (err, explanation) {
 
                 console.log("Fin de la requête:");
                 console.log("Query:" + query);
