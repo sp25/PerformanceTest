@@ -187,14 +187,14 @@ function obtenirQuery(index2d, operateur, distance){
 }
 
 function obtenirQueryAgregation(index2d, distance){
-    var query = "";
+    var queryIN = "";
     if (index2d){
-        query =[{$geoNear: { near:positionPoint.coordinates, maxDistance: distance, distanceField:"dist", spherical:"false", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+        queryIN =[{$geoNear: { near:positionPoint.coordinates, maxDistance: distance, distanceField:"dist", spherical:"false", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
     }
     else {
-        query =[{$geoNear: { near: { type: "Point", coordinates:positionPoint.coordinates }, maxDistance: distance, distanceField:"dist", spherical:"true", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+        queryIN =[{$geoNear: { near: { type: "Point", coordinates:positionPoint.coordinates }, maxDistance: distance, distanceField:"dist", spherical:"true", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
     }
-    return query;
+    return queryIN;
 }
 
 function obtenirPolygoneSelonDistance(distance){
