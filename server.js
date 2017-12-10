@@ -15,7 +15,7 @@ var dataset2d_p = '_2d_p';
 var dataset2d_l = '_2d_l';
 
 var distancesGeom = [];
-var positionPoint = { "type": "Point", "coordinates": [ 7.562892923, 51.535703584 ] };
+var positionPoint = '';
 var distances =[1,2,4,8];
 var distancesGeom = [];
 
@@ -166,5 +166,16 @@ function init(){
                 db.close();
             });
         }
+    });
+
+    MongoClient.connect(urlHero, function(err, db) {
+        if (err) throw err;
+
+        var query = {"properties.OBJECTID":"1"};
+        db.collection("input_ponctuel").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            positionPoint = result.geometry
+            db.close();
+        });
     });
 }
