@@ -116,10 +116,10 @@ function obtenirDatasetClientMongo(index2d, geometrie){
 
     var datasetBase = "dataset1";
     var dataset = "";
-    if (index2d && geometrie == 'ponctuelle') dataset = datasetBase + dataset2dsp_p;
-    else if (index2d && geometrie == 'lineaire') dataset = datasetBase + dataset2dsp_l;
-    else if (!index2d && geometrie == 'ponctuelle') dataset = datasetBase + dataset2d_p;
-    else if (!index2d && geometrie == 'lineaire') dataset = datasetBase + dataset2d_l;
+    if (index2d && geometrie == 'ponctuelle') dataset = datasetBase + dataset2d_p;
+    else if (index2d && geometrie == 'lineaire') dataset = datasetBase + dataset2d_l;
+    else if (!index2d && geometrie == 'ponctuelle') dataset = datasetBase + dataset2dsp_p;
+    else if (!index2d && geometrie == 'lineaire') dataset = datasetBase + dataset2dsp_l;
 
     return dataset;
 }
