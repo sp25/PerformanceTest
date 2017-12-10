@@ -1,5 +1,5 @@
-//var express = require('express');
-//var app = express();
+var express = require('express');
+var app = express();
 var fs = require("fs");
 
 
@@ -24,11 +24,11 @@ var app = express()
 app.set('port', (process.env.PORT || 8081))
 app.use(express.static(__dirname + '/public'))
 
-var https = require('https');
+//var https = require('https');
 var http = require('http');
 
 http.createServer(app).listen('port');
-https.createServer(ops, app).listen('port');
+//https.createServer(app).listen('port');
 
 app.listen(app.get('port'), function() {
     console.log("Node app is running at localhost:" + app.get('port'))
