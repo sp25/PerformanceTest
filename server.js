@@ -2,9 +2,7 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
-
 var url = require('url');
-
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
@@ -17,7 +15,7 @@ var dataset2d_p = '_2d_p';
 var dataset2d_l = '_2d_l';
 
 var distancesGeom = [];
-var positionPoint = { "type": "Point", "coordinates": [ 7.562892923000049, 51.535703584000032 ] };
+var positionPoint = { "type": "Point", "coordinates": [ 7.562892923, 51.535703584 ] };
 var distances =[1,2,4,8];
 var distancesGeom = [];
 
@@ -60,13 +58,15 @@ app.get('/performances', function(req, res) {
     var donnees = obtenirDatasetClientMongo(index2d, geometrie);
     var distanceParam = obtenirDistance(index2d, distance, operateur);
     var query = obtenirQuery(index2d, operateur, distance);
+    console.log("Table: " + donnees);
+    console.log("Distance: " + distanceParam);
 
     console.log("Début connection à Mongo...");
     MongoClient.connect(urlHero, function (err, db) {
         if (err) throw err;
 
         console.log("Début de la requête sur BD :" + urlHero);
-        console.log("Table: " + donnees);
+
         var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
             console.log("Fin de la requête:");
