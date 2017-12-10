@@ -132,7 +132,7 @@
         var queryString = "?index2d=" + index2d + "&geometrie=" + geometrie + "&operateur=" + operateur +
                             "&distance=" + distance + "&donnees=" + donnees;
 
-        $.get("https://glo7035.herokuapp.com/performances" + queryString, function (req, status) {
+        $.get("https://glo7035.herokuapp.com:443/performances" + queryString, function (req, status) {
 
             var temps = String(req.temps);
             var returned = String(req.returned);
