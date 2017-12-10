@@ -15,7 +15,7 @@ var dataset2d_p = '_2d_p';
 var dataset2d_l = '_2d_l';
 
 var distancesGeom = [];
-var positionPoint = { type: "Point", coordinates: [ 7.562892923, 51.535703584 ] };
+var positionPoint = { "type": "Point", "coordinates": [ 7.562892923, 51.535703584 ] };
 var distances =[1,2,4,8];
 var distancesGeom = [];
 
