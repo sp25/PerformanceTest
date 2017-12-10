@@ -15,7 +15,7 @@ var dataset2d_p = '_2d_p';
 var dataset2d_l = '_2d_l';
 
 var distancesGeom = [];
-var positionPoint = '';
+var positionPoint = { "type": "Point", "coordinates": [ 7.562892923, 51.535703584 ] };
 var distances =[1,2,4,8];
 var distancesGeom = [];
 
@@ -67,7 +67,10 @@ app.get('/performances', function(req, res) {
 
         console.log("Début de la requête sur BD :" + urlHero);
 
-        var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
+        db.dataset1_2dsp_l.find({ "geometry": {"$near":{"$geometry":positionPoint, $maxDistance:1000}} })
+
+        var cursor = db.collection("dataset1_2dsp_l").find({ "geometry": {"$near":{"$geometry":positionPoint, $maxDistance:1000}} }, {explain: true}).toArray(function (err, explanation) {
+        //var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
             console.log("Fin de la requête:");
             console.log("Query:" + query);
@@ -166,16 +169,5 @@ function init(){
                 db.close();
             });
         }
-    });
-
-    MongoClient.connect(urlHero, function(err, db) {
-        if (err) throw err;
-
-        var query = {"properties.OBJECTID":"1"};
-        db.collection("input_ponctuel").find(query).toArray(function (err, result) {
-            if (err) throw err;
-            positionPoint = result.geometry
-            db.close();
-        });
     });
 }
