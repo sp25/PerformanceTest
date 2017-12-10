@@ -86,8 +86,6 @@
             <label id="resultatTemps"></label><br><br>
             <label>Nombre d'enregistrements moyen retournés:</label><br>
             <label id="resultatReturned"></label><br>
-            <label>Nombre d'enregistrement dans la table:</label><br>
-            <label id="nbrEnrTable"></label><br><br>
             <div class ="loader" id="spinner"></div>
         </div>
     </div>
@@ -123,12 +121,6 @@
             document.getElementById('spinner').style.visibility = 'hidden';
             return;
         }
-
-        var nbrEnregistrement = 0;
-        if (donnees === 'dataset1'){ nbrEnregistrement = 10000 }
-        else if (donnees === 'dataset2'){ nbrEnregistrement = 20000}
-        else if (donnees === 'dataset3') {nbrEnregistrement = 30000}
-        document.getElementById('nbrEnrTable').innerHTML = nbrEnregistrement;
 
         var queryString = "?index2d=" + index2d + "&geometrie=" + geometrie + "&operateur=" + operateur +
                             "&distance=" + distance + "&donnees=" + donnees;
