@@ -69,8 +69,7 @@ app.get('/performances', function(req, res) {
 
         console.log("Début de la requête sur BD :" + urlHero);
 
-        var cursor = db.collection("dataset1_2d_l").find({ geometry: {$near:{$geometry:[ 7.562892923, 51.535703584 ], $maxDistance:1000}} }, {explain: true}).toArray(function (err, explanation) {
-        //var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
+        var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
             console.log("Fin de la requête:");
             console.log("Query:" + query);
