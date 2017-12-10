@@ -69,30 +69,65 @@ app.get('/performances', function(req, res) {
 
         console.log("Début de la requête sur BD :" + urlHero);
 
-        var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
+        if (operateur != 'pipeline'){
 
-            console.log("Fin de la requête:");
-            console.log("Query:" + query);
-            console.log("Table:" + donnees);
+            var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
-            if (explanation) {
-                console.log("temps:" + explanation[0].executionStats.executionTimeMillis);
-                console.log("returned:" + explanation[0].executionStats.nReturned);
+                console.log("Fin de la requête:");
+                console.log("Query:" + query);
+                console.log("Table:" + donnees);
 
-                temps = explanation[0].executionStats.executionTimeMillis;
-                returned = explanation[0].executionStats.nReturned;
-            }
-            else {
-                console.log("Erreur");
-            }
+                if (explanation) {
+                    console.log("temps:" + explanation[0].executionStats.executionTimeMillis);
+                    console.log("returned:" + explanation[0].executionStats.nReturned);
 
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({
-                temps: String(temps),
-                returned: String(returned)
-            }))
-            db.close();
-        });
+                    temps = explanation[0].executionStats.executionTimeMillis;
+                    returned = explanation[0].executionStats.nReturned;
+                }
+                else {
+                    console.log("Erreur");
+                }
+
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({
+                    temps: String(temps),
+                    returned: String(returned)
+                }))
+                db.close();
+            });}
+        else
+        {
+            var query = obtenirQueryAgregation(index2d, distance);
+            var before = new Date();
+            var cursor = db.collection(donnees).aggregate(query).toArray(function (err, explanation) {
+
+                console.log("Fin de la requête:");
+                console.log("Query:" + query);
+                console.log("Table:" + donnees);
+
+                var after = new Date();
+                var execution_mills = after - before;
+
+                if (explanation) {
+                    console.log("temps:" + explanation[0].executionStats.executionTimeMillis);
+                    console.log("returned:" + explanation[0].executionStats.nReturned);
+
+                    temps = execution_mills;
+                    returned = "N/A";
+                }
+                else {
+                    console.log("Erreur");
+                }
+
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({
+                    temps: String(temps),
+                    returned: String(returned)
+                }))
+                db.close();
+            });}
+        }
+
     })
 });
 
@@ -148,6 +183,16 @@ function obtenirQuery(index2d, operateur, distance){
         }
     }
     return query;
+}
+
+function obtenirQueryAgregation(index2d, distance){
+    var query = "";
+    if (index2d){
+        query =[{$geoNear: { near:positionPoint.coordinates, maxDistance: distance, distanceField:"dist", spherical:"false", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+    }
+    else {
+        query =[{$geoNear: { near: { type: "Point", "coordinates":positionPoint.coordinates }, maxDistance: distance, distanceField:"dist", spherical:"true", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+    }
 }
 
 function obtenirPolygoneSelonDistance(distance){
