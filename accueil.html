@@ -93,7 +93,7 @@
 </div>
 <script>
 
-    //var $ = require("express");
+    var $ = require("express");
 
     function InitForm(){
         document.getElementById('alert').style.visibility = 'hidden';
@@ -101,7 +101,7 @@
     }
 
     function executeRequest() {
-
+        console.log("Début exécution de la requête");
         document.getElementById('alert').style.visibility = 'hidden';
         document.getElementById('spinner').style.visibility = 'visible';
 
@@ -132,6 +132,8 @@
         var queryString = "?index2d=" + index2d + "&geometrie=" + geometrie + "&operateur=" + operateur +
                             "&distance=" + distance + "&donnees=" + donnees;
 
+        console.log("Début appel express.js");
+        console.log("QueryString=" + queryString);
         $.get("https://glo7035.herokuapp.com/performances" + queryString, function (req, status) {
 
             var temps = String(req.temps);
