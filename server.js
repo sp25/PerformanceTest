@@ -100,6 +100,7 @@ app.get('/performances', function(req, res) {
         else {
             var queryAgg = obtenirQueryAgregation(index2d, distance);
             var before = new Date();
+            console.log("Début de la requête:");
             var cursor = db.collection(donnees).aggregate(queryAgg).toArray(function (err, explanation) {
 
                 console.log("Fin de la requête:");
@@ -109,16 +110,8 @@ app.get('/performances', function(req, res) {
                 var after = new Date();
                 var execution_mills = after - before;
 
-                if (explanation) {
-                    console.log("temps:" + explanation[0].executionStats.executionTimeMillis);
-                    console.log("returned:" + explanation[0].executionStats.nReturned);
-
-                    temps = execution_mills;
-                    returned = "N/A";
-                }
-                else {
-                    console.log("Erreur");
-                }
+                temps = execution_mills;
+                returned = "N/A";
 
                 res.setHeader('Content-Type', 'application/json');
                 res.send(JSON.stringify({
