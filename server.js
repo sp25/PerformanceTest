@@ -57,7 +57,7 @@ app.get('/performances', function(req, res) {
     console.log("Début obtenir paramètres...");
     var donnees = obtenirDatasetClientMongo(index2d, geometrie);
     var distanceParam = obtenirDistance(index2d, distance, operateur);
-    var query = obtenirQuery(index2d, operateur, distance);
+    var query = obtenirQuery(index2d, operateur, distanceParam);
     var temps = 0;
     var returned = 0;
     console.log("Table: " + donnees);
@@ -98,7 +98,7 @@ app.get('/performances', function(req, res) {
             return;
         }
         else {
-            var queryAgg = obtenirQueryAgregation(index2d, distance);
+            var queryAgg = obtenirQueryAgregation(index2d, distanceParam);
             var before = new Date();
             console.log("Début de la requête:");
             var cursor = db.collection(donnees).aggregate(queryAgg).toArray(function (err, explanation) {
@@ -153,14 +153,14 @@ function obtenirDatasetClientMongo(index2d, geometrie){
     return dataset;
 }
 
-function obtenirQuery(index2d, operateur, distance){
+function obtenirQuery(index2d, operateur, distanceParam){
     var query = "";
     if (index2d){
         if (operateur == '$near'){
-           query = { geometry :{ $near : positionPoint.coordinates, $maxDistance: distance / 80} };
+           query = { geometry :{ $near : positionPoint.coordinates, $maxDistance: distanceParam} };
         }
         else {
-            query = { geometry :{ $geoWithin : { $centerSphere : [ positionPoint.coordinates , distance / 6378.1 ] }} };
+            query = { geometry :{ $geoWithin : { $centerSphere : [ positionPoint.coordinates , distanceParam] }} };
         }
     }
     else {
@@ -179,14 +179,14 @@ function obtenirQuery(index2d, operateur, distance){
     return query;
 }
 
-function obtenirQueryAgregation(index2d, distance){
+function obtenirQueryAgregation(index2d, distanceParam){
     var queryIN = "";
-    var aggDistance = distance * 1000;
+
     if (index2d){
-        queryIN =[{$geoNear: { near:positionPoint.coordinates, maxDistance: aggDistance, distanceField:"dist", spherical:"false", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+        queryIN =[{$geoNear: { near:positionPoint.coordinates, maxDistance: distanceParam, distanceField:"dist", spherical:"false", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
     }
     else {
-        queryIN =[{$geoNear: { near: { type: "Point", coordinates:positionPoint.coordinates }, maxDistance: aggDistance, distanceField:"dist", spherical:"true", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+        queryIN =[{$geoNear: { near: { type: "Point", coordinates:positionPoint.coordinates }, maxDistance: distanceParam, distanceField:"dist", spherical:"true", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
     }
     return queryIN;
 }
