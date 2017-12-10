@@ -71,7 +71,7 @@ app.get('/performances', function(req, res) {
 
         if (operateur != 'pipeline') {
 
-            var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
+                var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
                 console.log("Fin de la requête:");
                 console.log("Query:" + query);
@@ -127,7 +127,7 @@ app.get('/performances', function(req, res) {
                 db.close();
             });
         }
-
+    });
 });
 
 function obtenirDistance(index2d, distance, operateur){
