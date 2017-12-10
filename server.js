@@ -66,7 +66,7 @@ app.get('/performances', function(req, res) {
         if (err) throw err;
 
         console.log("Début de la requête sur BD :" + urlHero);
-        console.log("MongoQuery:" + query);
+        console.log("MongoQuery:" + query.toString());
         var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
             console.log("Fin de la requête:");
