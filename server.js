@@ -181,11 +181,12 @@ function obtenirQuery(index2d, operateur, distance){
 
 function obtenirQueryAgregation(index2d, distance){
     var queryIN = "";
+    var aggDistance = distance * 1000;
     if (index2d){
-        queryIN =[{$geoNear: { near:positionPoint.coordinates, maxDistance: distance, distanceField:"dist", spherical:"false", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+        queryIN =[{$geoNear: { near:positionPoint.coordinates, maxDistance: aggDistance, distanceField:"dist", spherical:"false", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
     }
     else {
-        queryIN =[{$geoNear: { near: { type: "Point", coordinates:positionPoint.coordinates }, maxDistance: distance, distanceField:"dist", spherical:"true", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
+        queryIN =[{$geoNear: { near: { type: "Point", coordinates:positionPoint.coordinates }, maxDistance: aggDistance, distanceField:"dist", spherical:"true", limit:3000000}}, {$group: {_id: "$properties.fclass", count: {$sum: 1}}}];
     }
     return queryIN;
 }
