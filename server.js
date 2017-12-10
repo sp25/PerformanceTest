@@ -17,6 +17,17 @@ var positionPoint = { "type": "Point", "coordinates": [ 7.562892923000049, 51.53
 var distances =[1,2,4,8];
 var distancesGeom = [];
 
+var express = require('express')
+var app = express()
+
+app.set('port', (process.env.PORT || 5000))
+app.use(express.static(__dirname + '/public'))
+
+
+app.listen(app.get('port'), function() {
+    console.log("Node app is running at localhost:" + app.get('port'))
+})
+
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'null');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
