@@ -69,7 +69,7 @@ app.get('/performances', function(req, res) {
 
         console.log("Début de la requête sur BD :" + urlHero);
 
-        if (operateur != 'pipeline'){
+        if (operateur != 'pipeline') {
 
             var cursor = db.collection(donnees).find(query, {explain: true}).toArray(function (err, explanation) {
 
@@ -94,9 +94,9 @@ app.get('/performances', function(req, res) {
                     returned: String(returned)
                 }))
                 db.close();
-            });}
-        else
-        {
+            });
+        }
+        else {
             var query = obtenirQueryAgregation(index2d, distance);
             var before = new Date();
             var cursor = db.collection(donnees).aggregate(query).toArray(function (err, explanation) {
@@ -125,10 +125,9 @@ app.get('/performances', function(req, res) {
                     returned: String(returned)
                 }))
                 db.close();
-            });}
+            });
         }
 
-    })
 });
 
 function obtenirDistance(index2d, distance, operateur){
