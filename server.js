@@ -95,6 +95,7 @@ app.get('/performances', function(req, res) {
                 }))
                 db.close();
             });
+            return;
         }
         else {
             var query = obtenirQueryAgregation(index2d, distance);
@@ -126,6 +127,7 @@ app.get('/performances', function(req, res) {
                 }))
                 db.close();
             });
+            return;
         }
     });
 });
