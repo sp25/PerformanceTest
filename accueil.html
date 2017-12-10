@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Évaluer les performances d'une requête spatiale:</title>
+    <title>Évaluer les performances d'une requête spatiale avec MongoDB:</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
@@ -82,9 +82,9 @@
                 <strong>Avertissement!</strong> L'opérateur $geoIntersect n'existe pas pour un index de type 2D.
             </div>
             <h3>Résultats:</h3>
-            <label>Temps moyen en millisecondes:</label><br>
+            <label>Temps en millisecondes:</label><br>
             <label id="resultatTemps"></label><br><br>
-            <label>Nombre d'enregistrements moyen retournés:</label><br>
+            <label>Nombre d'enregistrements retournés:</label><br>
             <label id="resultatReturned"></label><br>
             <div class ="loader" id="spinner"></div>
         </div>
