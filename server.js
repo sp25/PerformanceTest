@@ -72,11 +72,17 @@ app.get('/performances', function(req, res) {
             console.log("Fin de la requête:");
             console.log("Query:" + query);
             console.log("Table:" + donnees);
-            console.log("temps:" + explanation[0].executionStats.executionTimeMillis);
-            console.log("returned:" + explanation[0].executionStats.nReturned);
 
-            temps = explanation[0].executionStats.executionTimeMillis;
-            returned = explanation[0].executionStats.nReturned;
+            if (explanation) {
+                console.log("temps:" + explanation[0].executionStats.executionTimeMillis);
+                console.log("returned:" + explanation[0].executionStats.nReturned);
+
+                temps = explanation[0].executionStats.executionTimeMillis;
+                returned = explanation[0].executionStats.nReturned;
+            }
+            else {
+                console.log("Erreur");
+            }
 
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({
